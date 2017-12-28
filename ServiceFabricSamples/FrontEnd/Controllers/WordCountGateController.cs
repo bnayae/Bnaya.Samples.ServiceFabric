@@ -90,8 +90,7 @@ namespace FrontEnd.Controllers
             string url = BuildUrl(word);
             using (var http = new HttpClient())
             {
-                var content = new StringContent(word, Encoding.UTF8, "application/json");
-                var response = await http.PostAsync(url, content);
+                var response = await http.PostAsJsonAsync(url, word);
                 if (response.IsSuccessStatusCode)
                     return Ok();
                 else
@@ -103,14 +102,10 @@ namespace FrontEnd.Controllers
         [HttpPut()]
         public async ValueTask<IActionResult> PutAsync([FromBody]string word)
         {
-            //HttpClientExtensions.PostAsJsonAsync<string>(word)
             string url = BuildUrl(word);
             using (var http = new HttpClient())
             {
                 var response = await http.PutAsJsonAsync(url, word);
-                //var content = new ObjectContent<string>(word, new JsonMediaTypeFormatter(), "application/json");
-                //var content = new ObjectContent(word, Encoding.UTF8, "application/json");
-                //var response = await http.PutAsync(url, content);
                 if (response.IsSuccessStatusCode)
                     return Ok();
                 else
