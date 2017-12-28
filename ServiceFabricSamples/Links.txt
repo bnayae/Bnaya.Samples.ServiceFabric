@@ -1,0 +1,5 @@
+Video Tutorial
+https://channel9.msdn.com/Events/Connect/2017/E100
+
+Reverse Proxy:
+https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-reverseproxy
