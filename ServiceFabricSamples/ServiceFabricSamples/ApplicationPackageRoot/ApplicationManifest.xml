@@ -5,6 +5,9 @@
     <Parameter Name="StatefulWebApi_MinReplicaSetSize" DefaultValue="3" />
     <Parameter Name="StatefulWebApi_PartitionCount" DefaultValue="1" />
     <Parameter Name="StatefulWebApi_TargetReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="BackendActorService_PartitionCount" DefaultValue="10" />
+    <Parameter Name="BackendActorService_MinReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="BackendActorService_TargetReplicaSetSize" DefaultValue="3" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
@@ -16,6 +19,9 @@
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="StatefulWebApiPkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="BackendActorsPkg" ServiceManifestVersion="1.0.0" />
   </ServiceManifestImport>
   <DefaultServices>
     <!-- The section below creates instances of service types, when an instance of this 
@@ -31,6 +37,11 @@
     <Service Name="StatefulWebApi" ServicePackageActivationMode="ExclusiveProcess">
       <StatefulService ServiceTypeName="StatefulWebApiType" TargetReplicaSetSize="[StatefulWebApi_TargetReplicaSetSize]" MinReplicaSetSize="[StatefulWebApi_MinReplicaSetSize]">
         <UniformInt64Partition PartitionCount="[StatefulWebApi_PartitionCount]" LowKey="0" HighKey="25" />
+      </StatefulService>
+    </Service>
+    <Service Name="BackendActorService" GeneratedIdRef="5d6b2864-72f5-47a3-8edb-74285793a83b|Persisted">
+      <StatefulService ServiceTypeName="BackendActorServiceType" TargetReplicaSetSize="[BackendActorService_TargetReplicaSetSize]" MinReplicaSetSize="[BackendActorService_MinReplicaSetSize]">
+        <UniformInt64Partition PartitionCount="[BackendActorService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
       </StatefulService>
     </Service>
   </DefaultServices>

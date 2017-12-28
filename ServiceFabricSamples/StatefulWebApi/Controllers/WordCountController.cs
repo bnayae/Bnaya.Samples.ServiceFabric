@@ -80,7 +80,7 @@ namespace StatefulWebApi.Controllers
             var countState = await _stateManager.GetOrAddAsync<IReliableDictionary<string, int>>("Counting").ConfigureAwait(false);
             using (ITransaction tx = _stateManager.CreateTransaction())
             {
-                await countState.AddOrUpdateAsync(tx, word.ToLower(), 0, (k, v) => v + 1).ConfigureAwait(false);
+                await countState.AddOrUpdateAsync(tx, word.ToLower(), 1, (k, v) => v + 1).ConfigureAwait(false);
 
                 await tx.CommitAsync().ConfigureAwait(false);
             }

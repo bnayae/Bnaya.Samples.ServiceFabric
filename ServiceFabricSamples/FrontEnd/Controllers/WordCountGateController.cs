@@ -32,7 +32,7 @@ namespace FrontEnd.Controllers
 
         private string BuildUrl(int partition, string relativeUrl = null)
         {
-            partition = partition % 26;
+            partition = Math.Abs(partition % 26);
             if (string.IsNullOrEmpty(relativeUrl))
                 return $"{STATEFUL_URL}?PartitionKey={partition}&PartitionKind=Int64Range";
             else

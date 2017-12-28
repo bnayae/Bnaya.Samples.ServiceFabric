@@ -32,6 +32,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BackendActors\BackendActors.csproj" />
     <ProjectReference Include="..\FrontEnd\FrontEnd.csproj" />
     <ProjectReference Include="..\StatefulWebApi\StatefulWebApi.csproj" />
   </ItemGroup>
