@@ -78,12 +78,14 @@ namespace StatefulWebApi.Controllers
         public async ValueTask<IActionResult> PutAsync([FromBody]string word)
         {
             var countState = await _stateManager.GetOrAddAsync<IReliableDictionary<string, int>>("Counting").ConfigureAwait(false);
+            var queue = await _stateManager.GetOrAddAsync<IReliableConcurrentQueue<string>>("Log").ConfigureAwait(false);
             using (ITransaction tx = _stateManager.CreateTransaction())
             {
                 await countState.AddOrUpdateAsync(tx, word.ToLower(), 1, (k, v) => v + 1).ConfigureAwait(false);
-
+                await queue.EnqueueAsync(tx, word);
                 await tx.CommitAsync().ConfigureAwait(false);
             }
+
             return Ok();
         }
 

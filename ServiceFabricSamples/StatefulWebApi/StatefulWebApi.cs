@@ -11,6 +11,7 @@ using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Data;
+using Microsoft.ServiceFabric.Data.Collections;
 
 namespace StatefulWebApi
 {
@@ -53,8 +54,19 @@ namespace StatefulWebApi
 
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
+            var queue = await base.StateManager.GetOrAddAsync<IReliableConcurrentQueue<string>>("Log").ConfigureAwait(false);
             while (!cancellationToken.IsCancellationRequested)
             {
+                using (ITransaction tx = StateManager.CreateTransaction())
+                {
+                    var reaponse = await queue.TryDequeueAsync(tx);
+                    if (reaponse.HasValue)
+                    {
+                        ServiceEventSource.Current.ServiceMessage(
+                            this.Context, $"Add Word = {reaponse.Value}");
+                    }
+                    await tx.CommitAsync().ConfigureAwait(false);
+                }
                 await Task.Delay(1000);
             }
         }
