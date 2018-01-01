@@ -33,7 +33,7 @@ namespace FrontEnd.Controllers
         [HttpGet("{key}")]
         public async ValueTask<(string key, int count)> Get(string key)
         {
-            var id = new ActorId(key);
+            var id = new ActorId(key.ToLower());
             IBackendActor instance = ActorProxy.Create<IBackendActor>(id);
             int count = await instance.GetCountAsync(CancellationToken.None);
             return (key, count);
@@ -45,7 +45,7 @@ namespace FrontEnd.Controllers
         [HttpPost()]
         public async ValueTask<IActionResult> Post([FromBody]string word)
         {
-            var id = new ActorId(word);
+            var id = new ActorId(word.ToLower());
             IBackendActor instance = ActorProxy.Create<IBackendActor>(id);
             await instance.AddOrUpdateAsync(CancellationToken.None);
             return Ok();
@@ -55,7 +55,7 @@ namespace FrontEnd.Controllers
         [HttpPut()]
         public async ValueTask<IActionResult> PutAsync([FromBody]string word)
         {
-            var id = new ActorId(word);
+            var id = new ActorId(word.ToLower());
             IBackendActor instance = ActorProxy.Create<IBackendActor>(id);
             await instance.AddOrUpdateAsync(CancellationToken.None);
             return Ok();
